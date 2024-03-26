@@ -1,1 +1,10 @@
 node_modules
+# vercel
+.vercel
+# env files
+.env
+# production
+/build
+# next.js
+/.next/
+/out/
