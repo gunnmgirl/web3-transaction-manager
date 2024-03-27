@@ -4,8 +4,10 @@ import TransactionForm from "app/components/TransactionForm";
 
 const Home = () => {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-around p-24">
-      <ConnectButton />
+    <main className="grid min-h-screen grid-rows-[auto,1fr] justify-center p-24">
+      <div>
+        <ConnectButton />
+      </div>
       <TransactionForm />
     </main>
   );
