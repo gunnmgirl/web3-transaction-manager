@@ -1,5 +1,5 @@
 "use client";
-import { http } from "wagmi";
+import { http, useAccount } from "wagmi";
 import { useState } from "react";
 import { createSmartAccountClient, PaymasterMode } from "@biconomy/account";
 import { Address, parseEther, createWalletClient } from "viem";
@@ -16,6 +16,7 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
   const [isConfirming, setIsConfirming] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [hash, setHash] = useState("");
+  const { address } = useAccount();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setIsPending(true);
@@ -93,9 +94,15 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
           required
         />
         <Input label="Value" name="value" placeholder="0.05" required />
-        <Button isActive type="submit" className="mt-2" disabled={isPending}>
-          {isPending ? "Confirming..." : "Send"}
-        </Button>
+        {address ? (
+          <Button isActive type="submit" className="mt-2" disabled={isPending}>
+            {isPending ? "Confirming..." : "Send"}
+          </Button>
+        ) : (
+          <Button className="mt-2" disabled={true}>
+            Connect Wallet
+          </Button>
+        )}
       </form>
       <div className="w-80 min-h-40">
         {hash && (
