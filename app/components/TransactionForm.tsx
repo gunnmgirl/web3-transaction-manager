@@ -1,7 +1,7 @@
 "use client";
 import { http } from "wagmi";
 import { useState } from "react";
-import { createSmartAccountClient } from "@biconomy/account";
+import { createSmartAccountClient, PaymasterMode } from "@biconomy/account";
 import { Address, parseEther, createWalletClient } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { sepolia } from "viem/chains";
@@ -11,7 +11,7 @@ import Button from "app/components/Button";
 import { formatHash } from "app/helpers";
 import { BUNDELER_URL, ETHERSCAN_SEPOLIA_URL } from "app/constants";
 
-const TransactionForm = () => {
+const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
   const [isPending, setIsPending] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
@@ -42,12 +42,24 @@ const TransactionForm = () => {
       const smartWallet = await createSmartAccountClient({
         signer,
         bundlerUrl: BUNDELER_URL,
+        ...(isGasless && {
+          biconomyPaymasterApiKey:
+            process.env.NEXT_PUBLIC_BICONOMY_PAYMASTER_API_KEY,
+        }),
       });
 
-      const userOpResponse = await smartWallet.sendTransaction({
-        to,
-        value: etherValue,
-      });
+      const userOpResponse = await smartWallet.sendTransaction(
+        {
+          to,
+          value: etherValue,
+        },
+        {
+          ...(isGasless && {
+            paymasterServiceData: { mode: PaymasterMode.SPONSORED },
+          }),
+        }
+      );
+
       setIsPending(false);
       setIsConfirming(true);
 
@@ -85,7 +97,7 @@ const TransactionForm = () => {
           {isPending ? "Confirming..." : "Send"}
         </Button>
       </form>
-      <div className="w-full min-h-40">
+      <div className="w-80 min-h-40">
         {hash && (
           <div className="flex justify-between">
             Transaction Hash:
