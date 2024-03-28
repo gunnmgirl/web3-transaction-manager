@@ -19,6 +19,8 @@ const TransactionForm = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setIsPending(true);
+    setIsConfirmed(false);
+    setHash("");
     event.preventDefault();
 
     const formData = new FormData(event.target as HTMLFormElement);
