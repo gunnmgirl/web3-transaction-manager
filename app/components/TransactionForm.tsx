@@ -3,7 +3,8 @@ import { http, useAccount } from "wagmi";
 import { useState } from "react";
 import { createSmartAccountClient, PaymasterMode } from "@biconomy/account";
 import { Address, parseEther, createWalletClient } from "viem";
-import { privateKeyToAccount } from "viem/accounts";
+// import { privateKeyToAccount } from "viem/accounts";
+import { useEthersSigner } from "app/ethersAdapters";
 import { sepolia } from "viem/chains";
 import Link from "next/link";
 import Input from "app/components/Input";
@@ -17,6 +18,7 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [hash, setHash] = useState("");
   const { address } = useAccount();
+  const mySigner = useEthersSigner({ chainId: sepolia.id });
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setIsPending(true);
@@ -30,18 +32,19 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
     const etherValue = parseEther(value);
 
     try {
-      const account = privateKeyToAccount(
-        ("0x" + process.env.NEXT_PUBLIC_ACCOUNT_PRIVATE_KEY) as Address
-      );
+      // const account = privateKeyToAccount(
+      //   ("0x" + process.env.NEXT_PUBLIC_ACCOUNT_PRIVATE_KEY) as Address
+      // );
 
-      const signer = createWalletClient({
-        account,
-        chain: sepolia,
-        transport: http(),
-      });
+      // const signer = createWalletClient({
+      //   account,
+      //   chain: sepolia,
+      //   transport: http(),
+      // });
 
       const smartWallet = await createSmartAccountClient({
-        signer,
+        senderAddress: address,
+        signer: mySigner,
         bundlerUrl: BUNDELER_URL,
         ...(isGasless && {
           biconomyPaymasterApiKey:
@@ -69,7 +72,7 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
         setHash(transactionHash);
       }
 
-      const userOpReceipt = await userOpResponse.wait(100);
+      const userOpReceipt = await userOpResponse.wait();
       if (userOpReceipt.success == "true") {
         setIsConfirming(false);
         setIsConfirmed(true);
