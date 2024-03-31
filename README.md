@@ -3,6 +3,8 @@
 Showcasing Biconomy's Paymaster service by utilizing gasless transactions.
 Check more on Paymaster service [here](https://docs.biconomy.io/paymaster)
 
+![Homepage](readme/web3-transaction-manager.png)
+
 ## Getting Started
 
 First, run the development server:
