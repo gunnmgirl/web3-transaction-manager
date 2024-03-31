@@ -1,27 +1,33 @@
 "use client";
-import { http, useAccount } from "wagmi";
+import { useAccount, useWalletClient } from "wagmi";
 import { useState } from "react";
 import { createSmartAccountClient, PaymasterMode } from "@biconomy/account";
-import { Address, parseEther, createWalletClient } from "viem";
-import { privateKeyToAccount } from "viem/accounts";
-import { sepolia } from "viem/chains";
+import { Address, parseEther } from "viem";
 import Link from "next/link";
 import Input from "app/components/Input";
 import Button from "app/components/Button";
 import { formatHash } from "app/helpers";
 import { BUNDELER_URL, ETHERSCAN_SEPOLIA_URL } from "app/constants";
 
+enum TransactionStatus {
+  Pending = "pending",
+  Confirming = "confirming",
+  Confirmed = "confirmed",
+}
+
 const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
-  const [isPending, setIsPending] = useState(false);
-  const [isConfirming, setIsConfirming] = useState(false);
-  const [isConfirmed, setIsConfirmed] = useState(false);
+  const [status, setStatus] = useState<TransactionStatus | null>(null);
+  const [error, setError] = useState("");
   const [hash, setHash] = useState("");
   const { address } = useAccount();
+  const { data: walletClient } = useWalletClient();
+  const [counter, setCounter] = useState(1);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    setIsPending(true);
-    setIsConfirmed(false);
+    setStatus(TransactionStatus.Pending);
+    setError("");
     setHash("");
+    setCounter(counter + 1);
     event.preventDefault();
 
     const formData = new FormData(event.target as HTMLFormElement);
@@ -30,18 +36,12 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
     const etherValue = parseEther(value);
 
     try {
-      const account = privateKeyToAccount(
-        ("0x" + process.env.NEXT_PUBLIC_ACCOUNT_PRIVATE_KEY) as Address
-      );
-
-      const signer = createWalletClient({
-        account,
-        chain: sepolia,
-        transport: http(),
-      });
+      if (!walletClient) {
+        return;
+      }
 
       const smartWallet = await createSmartAccountClient({
-        signer,
+        signer: walletClient,
         bundlerUrl: BUNDELER_URL,
         ...(isGasless && {
           biconomyPaymasterApiKey:
@@ -58,26 +58,24 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
           ...(isGasless && {
             paymasterServiceData: { mode: PaymasterMode.SPONSORED },
           }),
+          nonceOptions: { nonceKey: counter },
         }
       );
 
-      setIsPending(false);
-      setIsConfirming(true);
+      setStatus(TransactionStatus.Confirming);
 
       const { transactionHash } = await userOpResponse.waitForTxHash();
       if (transactionHash) {
         setHash(transactionHash);
       }
 
-      const userOpReceipt = await userOpResponse.wait(100);
+      const userOpReceipt = await userOpResponse.wait();
       if (userOpReceipt.success == "true") {
-        setIsConfirming(false);
-        setIsConfirmed(true);
+        setStatus(TransactionStatus.Confirmed);
       }
     } catch (error) {
-      setIsPending(false);
-      setIsConfirming(false);
-      setIsConfirmed(false);
+      setStatus(null);
+      setError(error ? (error as string) : "Error on send transaction");
     }
   };
 
@@ -95,8 +93,13 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
         />
         <Input label="Value" name="value" placeholder="0.05" required />
         {address ? (
-          <Button isActive type="submit" className="mt-2" disabled={isPending}>
-            {isPending ? "Confirming..." : "Send"}
+          <Button
+            isActive
+            type="submit"
+            className="mt-2"
+            disabled={status === TransactionStatus.Pending}
+          >
+            {status === TransactionStatus.Pending ? "Confirming..." : "Send"}
           </Button>
         ) : (
           <Button className="mt-2" disabled={true}>
@@ -118,8 +121,15 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
             </Link>
           </div>
         )}
-        {isConfirming && <div>Waiting for confirmation...</div>}
-        {isConfirmed && <div>Transaction confirmed.</div>}
+        {status === TransactionStatus.Confirming && (
+          <div>Waiting for confirmation...</div>
+        )}
+        {status === TransactionStatus.Confirmed && (
+          <div>Transaction confirmed.</div>
+        )}
+        {error && (
+          <div className="text-rose-500">{`Error message: ${error}`}</div>
+        )}
       </div>
     </div>
   );
