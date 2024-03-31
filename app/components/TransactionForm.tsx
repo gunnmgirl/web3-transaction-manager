@@ -27,7 +27,6 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
     setStatus(TransactionStatus.Pending);
     setError("");
     setHash("");
-    setCounter(counter + 1);
     event.preventDefault();
 
     const formData = new FormData(event.target as HTMLFormElement);
@@ -72,7 +71,11 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
       const userOpReceipt = await userOpResponse.wait();
       if (userOpReceipt.success == "true") {
         setStatus(TransactionStatus.Confirmed);
+      } else if (userOpReceipt.success == "false") {
+        setStatus(null);
+        setError(userOpReceipt.reason || "Could not send value");
       }
+      setCounter(counter + 1);
     } catch (error) {
       setStatus(null);
       setError(error ? (error as string) : "Error on send transaction");
