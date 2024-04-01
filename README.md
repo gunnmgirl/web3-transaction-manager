@@ -1,7 +1,10 @@
 ## Sending gasless transactions!
 
-Showcasing Biconomy's Paymaster service by utilizing gasless transactions.
-Check more on Paymaster service [here](https://docs.biconomy.io/paymaster)
+Showcasing Biconomy's Paymaster service by utilizing gasless transactions.\
+Check more on Paymaster service [here](https://docs.biconomy.io/paymaster).
+
+Deployed using [Vercel](https://vercel.com/docs).\
+Visit app https://web3-transaction-manager.vercel.app/ and start sending gasless transactions!
 
 ![Homepage](readme/web3-transaction-manager.png)
 
@@ -23,4 +26,4 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Credits
 
-Powered by Biconomy's SDK.
+Powered by [Biconomy's SDK](https://docs.biconomy.io/).
