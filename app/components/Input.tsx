@@ -14,7 +14,10 @@ const Input = (props: Props) => {
     <div>
       <label
         htmlFor={inputId}
-        className="block text-base font-medium leading-6 text-white"
+        className={clsx(
+          "block text-base font-medium leading-6 text-white",
+          props.disabled && "text-gray-500"
+        )}
       >
         {label}
       </label>
@@ -22,7 +25,10 @@ const Input = (props: Props) => {
         <input
           id={inputId}
           type="text"
-          className="block w-full rounded-md border-0 bg-white/10 px-2.5 py-1.5 pr-12 text-base text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          className={clsx(
+            "block w-full rounded-md border-0 bg-white/10 px-2.5 py-1.5 pr-12 text-base text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+            props.disabled && "text-gray-500"
+          )}
           {...rest}
         />
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">

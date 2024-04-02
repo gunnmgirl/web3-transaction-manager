@@ -1,7 +1,11 @@
 "use client";
 import { useAccount, useWalletClient } from "wagmi";
-import { useState } from "react";
-import { createSmartAccountClient, PaymasterMode } from "@biconomy/account";
+import { useEffect, useState } from "react";
+import {
+  type BiconomySmartAccountV2,
+  createSmartAccountClient,
+  PaymasterMode,
+} from "@biconomy/account";
 import { Address, parseEther } from "viem";
 import Link from "next/link";
 import Input from "app/components/Input";
@@ -22,6 +26,9 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
   const { address } = useAccount();
   const { data: walletClient } = useWalletClient();
   const [counter, setCounter] = useState(1);
+  const [bicoSmartContract, setBicoSmartContract] =
+    useState<BiconomySmartAccountV2 | null>(null);
+  const [smartAccount, setSmartAccount] = useState("");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setStatus(TransactionStatus.Pending);
@@ -35,20 +42,11 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
     const etherValue = parseEther(value);
 
     try {
-      if (!walletClient) {
+      if (!bicoSmartContract) {
         return;
       }
 
-      const smartWallet = await createSmartAccountClient({
-        signer: walletClient,
-        bundlerUrl: BUNDELER_URL,
-        ...(isGasless && {
-          biconomyPaymasterApiKey:
-            process.env.NEXT_PUBLIC_BICONOMY_PAYMASTER_API_KEY,
-        }),
-      });
-
-      const userOpResponse = await smartWallet.sendTransaction(
+      const userOpResponse = await bicoSmartContract.sendTransaction(
         {
           to,
           value: etherValue,
@@ -82,12 +80,43 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
     }
   };
 
+  useEffect(() => {
+    const createSmartContract = async () => {
+      if (!walletClient) {
+        return;
+      }
+
+      const smartWallet = await createSmartAccountClient({
+        signer: walletClient,
+        bundlerUrl: BUNDELER_URL,
+        ...(isGasless && {
+          biconomyPaymasterApiKey:
+            process.env.NEXT_PUBLIC_BICONOMY_PAYMASTER_API_KEY,
+        }),
+      });
+      setBicoSmartContract(smartWallet);
+      const saAddress = await smartWallet.getAccountAddress();
+      setSmartAccount(saAddress);
+    };
+
+    if (walletClient && !bicoSmartContract) {
+      createSmartContract();
+    }
+  }, [walletClient]);
+
   return (
     <div className="flex flex-col items-center justify-evenly">
       <form
         onSubmit={handleSubmit}
         className="flex flex-col items-end gap-4 justify-center"
       >
+        <Input
+          label="Smart Account Address"
+          name="smartAddress"
+          placeholder=""
+          disabled
+          value={smartAccount}
+        />
         <Input
           label="Address"
           name="address"
