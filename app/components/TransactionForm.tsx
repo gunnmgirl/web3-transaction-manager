@@ -5,8 +5,10 @@ import {
   type BiconomySmartAccountV2,
   createSmartAccountClient,
   PaymasterMode,
+  createBundler,
 } from "@biconomy/account";
 import { Address, parseEther } from "viem";
+import { sepolia } from "wagmi/chains";
 import Link from "next/link";
 import Input from "app/components/Input";
 import Button from "app/components/Button";
@@ -86,9 +88,14 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
         return;
       }
 
+      const bundler = await createBundler({
+        bundlerUrl: BUNDELER_URL,
+        userOpReceiptMaxDurationIntervals: { [sepolia.id]: 60000 },
+      });
+
       const smartWallet = await createSmartAccountClient({
         signer: walletClient,
-        bundlerUrl: BUNDELER_URL,
+        bundler: bundler,
         ...(isGasless && {
           biconomyPaymasterApiKey:
             process.env.NEXT_PUBLIC_BICONOMY_PAYMASTER_API_KEY,
