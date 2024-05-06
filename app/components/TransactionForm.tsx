@@ -106,6 +106,11 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
       setSmartAccount(saAddress);
     };
 
+    if (!walletClient) {
+      setBicoSmartContract(null);
+      return setSmartAccount("");
+    }
+
     if (walletClient && !bicoSmartContract) {
       createSmartContract();
     }
@@ -120,7 +125,7 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
         <Input
           label="Smart Account Address"
           name="smartAddress"
-          placeholder=""
+          placeholder="Please connect wallet"
           disabled
           value={smartAccount}
         />
