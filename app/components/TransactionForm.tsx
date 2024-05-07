@@ -134,8 +134,15 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
           name="address"
           placeholder="0xA0Cf…251e"
           required
+          disabled={!address}
         />
-        <Input label="Value" name="value" placeholder="0.05" required />
+        <Input
+          label="Value"
+          name="value"
+          placeholder="0.05"
+          required
+          disabled={!address}
+        />
         {address ? (
           <Button
             isActive
