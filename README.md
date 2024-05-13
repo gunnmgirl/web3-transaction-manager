@@ -10,7 +10,13 @@ Visit app https://web3-transaction-manager.vercel.app/ and start sending gasless
 
 ## Getting Started
 
-First, run the development server:
+Get your env variables from Biconomy Dashboard: \
+NEXT_PUBLIC_BICONOMY_AUTH_TOKEN \
+NEXT_PUBLIC_PROJECT_ID \
+NEXT_PUBLIC_ACCOUNT_PRIVATE_KEY \
+NEXT_PUBLIC_BICONOMY_PAYMASTER_API_KEY \
+
+Run the development server:
 
 ```bash
 npm run dev
