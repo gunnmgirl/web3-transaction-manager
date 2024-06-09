@@ -8,6 +8,7 @@ import {
   sepolia,
   polygonMumbai,
   lineaTestnet,
+  polygonAmoy,
 } from "wagmi/chains";
 
 export const config = getDefaultConfig({
@@ -22,6 +23,7 @@ export const config = getDefaultConfig({
     sepolia,
     polygonMumbai,
     lineaTestnet,
+    polygonAmoy,
   ],
   ssr: true,
 });

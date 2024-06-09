@@ -18,8 +18,8 @@
     "pino-pretty": "^11.0.0",
     "react": "^18",
     "react-dom": "^18",
-    "viem": "2.x",
-    "wagmi": "^2.5.13"
+    "viem": "2.10.5",
+    "wagmi": "latest"
   },
   "devDependencies": {
     "@types/node": "^20",
