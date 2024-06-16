@@ -19,12 +19,17 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
-"@biconomy/account@^4.1.1":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@biconomy/account/-/account-4.2.0.tgz#fcd5f17c441f5068dbf5d0703627a93fb0f47e9f"
-  integrity sha512-k7bpr5HstDhYOWQBZgBxOw+FHLpb8wPgokprvQbNKDA4Fc4iyiLKsVb4sLKqeyYm37CnhVp30Zy/eda87ph5DQ==
+"@biconomy/account@^4.4.5":
+  version "4.4.6"
+  resolved "https://registry.yarnpkg.com/@biconomy/account/-/account-4.4.6.tgz#ecb1c0cd088e5c1395688c0dd9d2e81bcd3c8c20"
+  integrity sha512-ipCisN2+qs7ma1gyJwkWaeuF3B7g497ZP+PKJAzA2VjFCaxxz5fYQzYckIGiVv1eiKjSb+7bM7VQ76UU0d/uCg==
   dependencies:
     merkletreejs "^0.3.11"
+
+"@biconomy/use-aa@^1.0.14":
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/@biconomy/use-aa/-/use-aa-1.0.14.tgz#c856bc171452e372f32e8e03ba4c7d226c47718c"
+  integrity sha512-WlxHKUaAn5j93LqxPfRg9RyjuuvulROYCzdvcLxINsrCnI88Hp/0oz7E8W2MjpcjymVLaozkT8oMFTatIrfRtQ==
 
 "@coinbase/wallet-sdk@3.9.1":
   version "3.9.1"
