@@ -10,11 +10,10 @@ import Link from "next/link";
 import Input from "app/components/Input";
 import Button from "app/components/Button";
 import { formatHash } from "app/helpers";
-import { ETHERSCAN_SEPOLIA_URL } from "app/constants";
 import { PaymasterMode } from "@biconomy/account";
 
 const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
-  const { address } = useAccount();
+  const { address, chain } = useAccount();
   const {
     mutate,
     isPending,
@@ -94,7 +93,7 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
           <div className="flex justify-between">
             Transaction Hash:
             <Link
-              href={`${ETHERSCAN_SEPOLIA_URL}/tx/${waitData.receipt.transactionHash}`}
+              href={`${chain?.blockExplorers?.default?.url}/tx/${waitData.receipt.transactionHash}`}
               rel="noopener noreferrer"
               target="_blank"
               className="text-indigo-500"
