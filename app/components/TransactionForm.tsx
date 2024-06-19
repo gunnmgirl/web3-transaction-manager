@@ -102,16 +102,18 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
             </Link>
           </div>
         )}
-        {isPending && <div>Waiting for confirmation...</div>}
-        {waitIsPending && (
-          <div>Transaction confirmed, waiting to process...</div>
-        )}
-        {errorSendTransaction && (
-          <div className="text-rose-500">{`Error message: ${errorSendTransaction}`}</div>
-        )}
-        {waitError && (
-          <div className="text-rose-500">{`Error message: ${waitError}`}</div>
-        )}
+        <div className="flex flex-col">
+          {isPending && <div>Waiting for confirmation...</div>}
+          {waitIsPending && (
+            <div>Transaction confirmed, waiting to process...</div>
+          )}
+          {errorSendTransaction && (
+            <div className="text-rose-500">{`Error message: ${errorSendTransaction}`}</div>
+          )}
+          {waitError && (
+            <div className="text-rose-500">{`Error message: ${waitError}`}</div>
+          )}
+        </div>
       </div>
     </div>
   );
