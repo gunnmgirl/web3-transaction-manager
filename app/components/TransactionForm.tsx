@@ -102,7 +102,7 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
             </Link>
           </div>
         )}
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-2">
           {isPending && <div>Waiting for confirmation...</div>}
           {waitIsPending && (
             <div>Transaction confirmed, waiting to process...</div>
