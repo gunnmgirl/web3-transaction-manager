@@ -5,12 +5,12 @@ import {
   useSmartAccount,
   useUserOpWait,
 } from "@biconomy/use-aa";
+import { PaymasterMode } from "@biconomy/account";
 import { Address, parseEther } from "viem";
 import Link from "next/link";
 import Input from "app/components/Input";
 import Button from "app/components/Button";
 import { formatHash } from "app/helpers";
-import { PaymasterMode } from "@biconomy/account";
 
 const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
   const { address, chain } = useAccount();
@@ -27,7 +27,7 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
     data: waitData,
   } = useUserOpWait(userOpResponse);
 
-  const newHandleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = new FormData(event.target as HTMLFormElement);
@@ -49,7 +49,7 @@ const TransactionForm = ({ isGasless }: { isGasless: boolean }) => {
   return (
     <div className="flex flex-col items-center justify-evenly">
       <form
-        onSubmit={newHandleSubmit}
+        onSubmit={handleSubmit}
         className="flex flex-col items-end gap-4 justify-center"
       >
         <Input

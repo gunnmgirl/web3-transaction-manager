@@ -13,7 +13,7 @@ import {
 
 export const config = getDefaultConfig({
   appName: "web3-transaction-manager",
-  projectId: process.env.NEXT_PUBLIC_PROJECT_ID as string,
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID ?? "",
   chains: [
     mainnet,
     polygon,

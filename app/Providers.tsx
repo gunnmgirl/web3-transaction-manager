@@ -2,8 +2,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 import { BiconomyProvider } from "@biconomy/use-aa";
-import { config } from "app/wagmiConfig";
 import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
+import { config } from "app/wagmiConfig";
 import { BUNDELER_URL } from "./constants";
 import "@rainbow-me/rainbowkit/styles.css";
 
